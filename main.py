@@ -1,3 +1,7 @@
+import logging as lgg
+
+	
+lgg.basicConfig(filename='sped.log',format='%(levelname)s:%(message)s', level=lgg.INFO)
 
 def ler_arquivo():
   with open('2018-01.txt','rb') as f:
@@ -25,6 +29,8 @@ def triagem():
       alteracao_cadastro_participante(linha)
     elif linha[1] == '0190':
       identificacao_unidades_medida(linha)
+    elif linha[1] =='0200':
+      tabela_id_item(linha)
 
 def abertura_arquivo(linha):
   '''
@@ -57,9 +63,6 @@ def abertura_arquivo(linha):
   REG = linha[1] 
   COD_VER = linha[2] 
   COD_FIN = linha[3]
-  '''Código da finalidade do arquivo:
-        0 - Remessa do arquivo original;
-        1 - Remessa do arquivo substituto.'''
   DT_INI = linha[4] 
   DT_FIN = linha[5] 
   NOME = linha[6] 
@@ -73,7 +76,8 @@ def abertura_arquivo(linha):
   IND_PERFIL = linha[14]
   IND_ATIV = linha[15]
 
-  print(REG,COD_VER, COD_FIN, DT_INI, DT_FIN,NOME, CNPJ, CPF, UF, IE, COD_MUN, IM, SUFRAMA, IND_PERFIL, IND_ATIV)
+  lgg.info('REGISTRO 0000: ABERTURA DO ARQUIVO DIGITAL E IDENTIFICAÇÃO DA ENTIDADE.')
+  lgg.info(f'REG: {REG},COD_VER: {COD_VER}, COD_FIN: {COD_FIN}, DT_INI: {DT_INI}, DT_FIN: {DT_FIN},NOME: {NOME}, CNPJ: {CNPJ}, {CPF}, {UF}, {IE}, {COD_MUN}, {IM}, {SUFRAMA}, {IND_PERFIL}, {IND_ATIV}')
 
 def abertura_bloco(linha):
   '''
@@ -86,7 +90,9 @@ def abertura_bloco(linha):
   '''
   REG = linha[1]
   IND_MOV = linha[2]
-  print(REG, IND_MOV)
+
+  lgg.info('REGISTRO 0001: ABERTURA DO BLOCO 0')
+  lgg.info(f'REG {REG}, IND_MOV {IND_MOV}')
 
 def dados_complementares(linha):
   '''
@@ -113,7 +119,8 @@ def dados_complementares(linha):
   FAX = linha[9]
   EMAIL = linha[10]
 
-  print(REG,FANTASIA, CEP, END, NUM, COMPL, BAIRRO, FONE, FAX, EMAIL)
+  lgg.info('REGISTRO 0005: DADOS COMPLEMENTARES DA ENTIDADE.')
+  lgg.info(f'REG: {REG},FANTASIA: {FANTASIA},CEP: {CEP},END: {END}, NUM: {NUM}, COMPL: {COMPL},BAIRRO {BAIRRO},FONE {FONE},FAX {FAX}, EMAIL: {EMAIL}')
 
 def dados_contribuinte_substituto(linha):
   '''
@@ -126,7 +133,8 @@ def dados_contribuinte_substituto(linha):
   UF_ST = linha[2]
   IE_ST = linha[3]
 
-  print(REG, UF_ST, IE_ST)
+  lgg.info('REGISTRO 0015: DADOS DO CONTRIBUINTE SUBSTITUTO OU RESPONSÁVEL PELO ICMS DESTINO.')
+  lgg.info(f'REG: {REG},UF_ST: {UF_ST},IE_ST: {IE_ST}')
 
 def dados_contabilista(linha):
   '''
@@ -163,7 +171,8 @@ def dados_contabilista(linha):
   FAX = linha[12]
   EMAIL = linha[13]
 
-  print(REG, NOME,  CPF,  CRC,  CNPJ,  CEP,  END,  NUM,  COMPL,  BAIRRO,  FONE,  FAX,  EMAIL)
+  lgg.info('REGISTRO 0100: DADOS DO CONTABILISTA')
+  lgg.info(f'REG: {REG}, NOME: {NOME}, CPF: {CPF}, CRC: {CRC}, CNPJ: {CNPJ}, CEP: {CEP}, END: {END}, NUM: {NUM}, COMPL: {COMPL}, BAIRRO: {BAIRRO}, FONE: {FONE}, {FAX}, {EMAIL}')
 
 def tabela_cadastro_participante(linha):
   '''
@@ -171,11 +180,11 @@ def tabela_cadastro_participante(linha):
     REG: Texto fixo contendo “0150”.
     COD_PART: Código de identificação do participante no arquivo.
     NOME: Nome pessoal ou empresarial do participante.
-    COD_PAIS: Código do país do participante, conforme a tabela indicada no item 3.2.1
+    COD_PAIS: Código do país do participante}, {conforme a tabela indicada no item 3.2.1
     CNPJ: CNPJ do participante.
     CPF: CPF do participante.
     IE: Inscrição Estadual do participante.
-    COD_MUN: Código do município, conforme a tabela IBGE
+    COD_MUN: Código do município}, {conforme a tabela IBGE
     SUFRAMA: Número de inscrição do participante na Suframa.
     END: Logradouro e endereço do imóvel
     NUM: Número do imóvel
@@ -196,7 +205,8 @@ def tabela_cadastro_participante(linha):
   COMPL = linha[13]
   BAIRRO = linha[14]
 
-  print(REG,COD_PART,NOME,COD_PAIS,CNPJ,CPF,IE,COD_MUN,SUFRAMA,END,NUM,COMPL,BAIRRO)
+  lgg.info("REGISTRO 0150: TABELA DE CADASTRO DO PARTICIPANTE.")
+  lgg.info(F'REG: {REG}, COD_PART: {COD_PART},NOME: {NOME},COD_PAIS {COD_PAIS}, CNPJ: {CNPJ},CPF: {CPF}, IE: {IE},COD_MUN: {COD_MUN},SUFRAMA: {SUFRAMA}, END: {END},NUM {NUM},COMPL: {COMPL}, BAIRRO: {BAIRRO}')
 
 def alteracao_cadastro_participante(linha):
   '''
@@ -212,8 +222,8 @@ def alteracao_cadastro_participante(linha):
   DT_ALT = linha[2]
   NR_CAMPO = linha[3]
   CONT_ANT = linha[4]
-
-  print(REG,DT_ALT,NR_CAMPO,CONT_ANT)
+  lgg.info('REGISTRO 0175: Alteração da Tabela de Cadastro de Participante.')
+  lgg.info(f' REG: {REG},DT_ALT {DT_ALT},NR_CAMPO: {NR_CAMPO},CONT_ANT: {CONT_ANT}')
 
 def identificacao_unidades_medida(linha):
   '''
@@ -228,7 +238,8 @@ def identificacao_unidades_medida(linha):
   UNID = linha[2]
   DESCR = linha[3]
 
-  print(REG,UNID,DESCR)
+  lgg.info('REGISTRO 0190: IDENTIFICAÇÃO DAS UNIDADES DE MEDIDA')
+  lgg.info(f'REG: {REG}, UNID: {UNID},DESCR: {DESCR}')
 
 
 def tabela_id_item(linha):
@@ -261,6 +272,22 @@ def tabela_id_item(linha):
     CEST: Código Especificador da Substituição Tributária
 
   '''
+  REG = linha[1]
+  COD_ITEM = linha[2]
+  DESCR_ITEM = linha[3]
+  COD_BARRA = linha[4]
+  COD_ANT_ITEM = linha[5]
+  UNID_INV = linha[6]
+  TIPO_ITEM = linha[7]
+  COD_NCM = linha[8]
+  EX_IPI = linha[9]
+  COD_GEN = linha[10]
+  COD_LST = linha[11]
+  ALIQ_ICMS = linha[12]
+  CEST = linha[13]
+
+  lgg.info('REGISTRO 0200: TABELA DE IDENTIFICAÇÃO DO ITEM (PRODUTO E SERVIÇOS).')
+  lgg.info(f'REG: {REG}, COD_ITEM: {COD_ITEM}, DESCR_ITEM: {DESCR_ITEM}, COD_BARRA: {COD_BARRA}, COD_ANT_ITEM: {COD_ANT_ITEM}, UNID_INV: {UNID_INV}, TIPO_ITEM: {TIPO_ITEM}, COD_NCM: {COD_NCM}, EX_IPI: {EX_IPI}, COD_GEN: {COD_GEN}, COD_LST: {COD_LST}, ALIQ_ICMS: {ALIQ_ICMS}, CEST: {CEST}')
 
 
 
